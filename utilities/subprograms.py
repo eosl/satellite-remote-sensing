@@ -106,7 +106,7 @@ def write_smi_png(png_fname, geophys_img, product, latlon, proj_name):
     if proj_name is 'Equidistant Cylindrical': proj_name = 'Cylindrical'
     
     #-------------------------------------------------------------------#
-    prod_min_max_table = os.path.expanduser('~/idl_pros/dly_wkl_mon_qcmasked_pros/png_min_max_settings/prod_min_max_tab_delimted_txt')
+    prod_min_max_table = os.path.expanduser('dly_wkl_mon_qcmasked/png_min_max_settings/prod_min_max_tab_delimted_txt')
     prod_min_max_info = get_prod_min_max(prod_min_max_table, product)
     
     low_limit = prod_min_max_info[1]
@@ -125,11 +125,11 @@ def write_smi_png(png_fname, geophys_img, product, latlon, proj_name):
         geophys_img = log10(geophys_img)
 
     if product[:3] != 'sst':
-        cmap = custom_cmap(os.path.expanduser('~/idl_pros/dly_wkl_mon_qcmasked_pros/subprograms/color_tables/standard/02-standard_chl.lut'))
-        color_bar_img_file= os.path.expanduser('~/idl_pros/dly_wkl_mon_qcmasked_pros/subprograms/color_bars/colorbar_seadas_std_chlor.png')   
+        cmap = custom_cmap(os.path.expanduser('dly_wkl_mon_qcmasked/color_tables/standard/02-standard_chl.lut'))
+        color_bar_img_file= os.path.expanduser('dly_wkl_mon_qcmasked/color_bars/colorbar_seadas_std_chlor.png')   
     if product[:3] == 'sst':
-        cmap = custom_cmap(os.path.expanduser('~/idl_pros/dly_wkl_mon_qcmasked_pros/subprograms/color_tables/standard/03-standard_sst.lut'))
-        color_bar_img_file= os.path.expanduser('~/idl_pros/dly_wkl_mon_qcmasked_pros/subprograms/color_bars/colorbar_seadas_std_sst.png')
+        cmap = custom_cmap(os.path.expanduser('dly_wkl_mon_qcmasked/color_tables/standard/03-standard_sst.lut'))
+        color_bar_img_file= os.path.expanduser('dly_wkl_mon_qcmasked/color_bars/colorbar_seadas_std_sst.png')
 
     
     #specify color map with NaN's as black
