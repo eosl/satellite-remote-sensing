@@ -49,6 +49,7 @@ def bl2_gen(filelist, l2bin_dir, product, named_flags_2check, space_res):
               'l3bprod=' + product, 
               'resolve=' + str(space_res).strip(),
               'flaguse=' + named_flags_2check])
+    
 
 #
 # make ascii file of bl2 files
@@ -317,11 +318,11 @@ def setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_
     filelist = asarray(glob.glob(l2dir + '/' + '*L2*'))
     
     # decompress files if necessary
-    if any(is_compressed(fi) for fi in filelist):
+    if any([is_compressed(fi) for fi in filelist]):
         for fi in filelist:
             decompress_file(fi)
         filelist = asarray(glob.glob(l2dir + '/' + '*L2*'))
-    
+
     
     good_index = where( filelist != '' )  
        
@@ -425,7 +426,6 @@ def batch_proc_L23(l2dir, output_dir='not_specified', products=['all'], space_re
     sst_files = list(asarray(filelist)[sst_file_indices])
     
     #-----------------------------------------------------#
-
 
     # for each average specified
     for average in time_period:        
