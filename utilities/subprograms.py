@@ -1,11 +1,14 @@
 #! /usr/bin/env python
 
 import os, sys
+sys.dont_write_bytecode = True
+
+
 from numpy import *
 from pylab import *
 import shutil
 
-sys.dont_write_bytecode = True
+
 
 
 

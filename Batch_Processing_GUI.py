@@ -9,7 +9,9 @@
 ##################################################
 
 import sys
+
 sys.path.insert(0, 'utilities')
+sys.dont_write_bytecode = True
 
 import batch_L23
 import batch_L12
@@ -18,7 +20,6 @@ import os, sys
 from Tkinter import *
 from tkFileDialog import askdirectory
 
-sys.dont_write_bytecode = True
 
 values={'l1a_dir':None,'l2_dir':'not_specified','output_dir':None,'prod_list':None,'latlon':None,'space_res':None,'time_period':None,'hires':None,'l2prod_list':None,
     'color_flags':None,'sst_flags':None,'stats_yesno':None,'NO2_onoff':None,'swir_onoff':None,'smi_proj':None}

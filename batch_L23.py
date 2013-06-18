@@ -10,12 +10,12 @@ from osgeo import gdal_array
 import shutil
 
 sys.path.insert(0, 'utilities')
+sys.dont_write_bytecode = True
 
 from hdf_utilities import *
 from general_utilities import *
 from subprograms import *
 
-sys.dont_write_bytecode = True
 
 
 # Coordinates (north, south, east, west)

@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 
 import sys
+
 sys.path.insert(0, 'utilities')
+sys.dont_write_bytecode = True
 
 import batch_L12
 import batch_L23
-
-sys.dont_write_bytecode = True
 
 
 

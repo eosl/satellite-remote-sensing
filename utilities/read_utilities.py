@@ -1,12 +1,15 @@
 #! /usr/bin/env python
 
+import sys
+sys.dont_write_bytecode = True
+
 import scipy.io
 import numpy as np
 import scipy.interpolate as si
 from general_utilities import *
-import sys
 
-sys.dont_write_bytecode = True
+
+
 
 #
 # input: 

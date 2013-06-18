@@ -1,11 +1,14 @@
 #! /usr/bin/env python
 
 import os, sys
+sys.dont_write_bytecode = True
+
+
 import numpy as np
 import zipfile, tarfile
 import shutil
 
-sys.dont_write_bytecode = True
+
 
 #
 # input: 

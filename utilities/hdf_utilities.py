@@ -1,7 +1,11 @@
 #! /usr/bin/env python
 
 import sys, os
+sys.dont_write_bytecode = True
+
 from osgeo import gdal, gdal_array
+
+
 
 #
 # Coordinates (north, south, east, west)
