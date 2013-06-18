@@ -88,13 +88,15 @@ def map_resize(data, latitudes, longitudes, xdim, ydim):
     pixels_per_lat = ydim/(lat2 - lat1)
     pixels_per_lon = xdim/(lon2 - lon1)
     
+    # map longitudes and latitudes to pixel number
     lon_pix = np.where(longitudes <= 180, (longitudes+180)*pixels_per_lon, (longitudes-179)*pixels_per_lon)
     lat_pix = map( lambda lat: (lat + 90)*pixels_per_lat, latitudes )
 
-    def func(lat,lon,value): mapped[lat,lon] = value
+    # put each lat/lon in its spot on rectangular grid
+    def func(lat,lon,value): mapped[lat,lon] = value    
     map( lambda i: map(lambda j: func(lat_pix[i], lon_pix[j], data[i,j]) ,range(0,len(lon_pix))) ,range(0,len(lat_pix)) )
     
-
+    
     return mapped
 
     

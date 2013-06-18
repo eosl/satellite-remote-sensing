@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 
 import glob
-import os
 from subprocess import call
-import sys
+import sys, os
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, 'utilities')

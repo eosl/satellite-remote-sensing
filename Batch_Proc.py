@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 
+import sys
+sys.path.insert(0, 'utilities')
+
 import batch_L12
 import batch_L23
 

@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 
-import batch_L12
-import batch_L23
 import sys, os
 import getopt
 
+sys.path.insert(0, 'utilities')
 sys.dont_write_bytecode = True
+
+import batch_L12
+import batch_L23
 
 
 if __name__=='__main__':

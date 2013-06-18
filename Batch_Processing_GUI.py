@@ -7,6 +7,10 @@
 #  To launch the GUI, type the following from the terminal
 #  $ python Batch_Processing_GUI.py
 ##################################################
+
+import sys
+sys.path.insert(0, 'utilities')
+
 import batch_L23
 import batch_L12
 import os, sys
