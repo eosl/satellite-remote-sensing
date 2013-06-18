@@ -315,6 +315,14 @@ def process(filelist, time_period, out_dir, products, named_flags_2check, space_
 #
 def setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_to_check):
     filelist = asarray(glob.glob(l2dir + '/' + '*L2*'))
+    
+    # decompress files if necessary
+    if any(is_compressed(fi) for fi in filelist):
+        for fi in filelist:
+            decompress_file(fi)
+        filelist = asarray(glob.glob(l2dir + '/' + '*L2*'))
+    
+    
     good_index = where( filelist != '' )  
        
     input_coords = Coords()
@@ -390,6 +398,7 @@ def batch_proc_L23(l2dir, output_dir='not_specified', products=['all'], space_re
     #setup variables
     color_chk, sst_chk, hires_chk, color_named_flags_2check, sst_named_flags_2check, sat_type, filelist, input_coords, year \
         = setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_to_check)
+        
 
 
     # put output data next to input data if not specified by user

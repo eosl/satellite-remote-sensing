@@ -7,6 +7,8 @@ import sys, os
 sys.dont_write_bytecode = True
 sys.path.insert(0, 'utilities')
 
+import general_utilities
+
 #-------------------------------
 #           MODIS
 #-------------------------------
@@ -142,6 +144,13 @@ def batch_proc_L12(l1a_dir, l2_dir='not_specified', prod_list='OC_suite', NO2_on
         
 
     fname_l1a = glob.glob(l1a_dir + '/' + '*L1A*') #list of all files in level 1 directory
+    
+    # decompress files if necessary
+    if any(general_utilities.is_compressed(fi) for fi in fname_l1a):
+        for fi in fname_l1a:
+            general_utilities.decompress_file(fi)
+        fname_la1 = glob.glob(l1a_dir + '/' + '*L1A*')
+
 
     # if user doesn't specify level 2 directory, make one next to L1 data directory
     if l2_dir == 'not_specified':

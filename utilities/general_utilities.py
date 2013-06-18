@@ -3,6 +3,7 @@
 import os, sys
 import numpy as np
 import zipfile, tarfile
+import shutil
 
 sys.dont_write_bytecode = True
 
@@ -43,28 +44,42 @@ def get_jday(file):
 
 # 
 # unzips and extracts tar and zip to same directory
+# puts old compressed files in separate directory
 # input:
 #   file ==> zipped file
 #
 def decompress_file(file):
-    new_file = os.path.basename(file)
-    path = os.path.dirname(file) + '/'
+    file_base = os.path.basename(file)
+    path = os.path.dirname(file)
+    new_dir = os.path.dirname(path) + '/compressed/'
     
+    if not os.path.exists(new_dir):
+        os.makedirs(new_dir)
 
     if zipfile.is_zipfile(file):
         zip = zipfile.ZipFile(file)
-        zip.extractall(path)
+        zip.extractall(path + '/')
+        shutil.move(file, new_dir + file_base)
     elif tarfile.is_tarfile(file):
         tar = tarfile.open(file)
-        tar.extractall(path)
+        tar.extractall(path + '/')
         tar.close()
+        shutil.move(file, new_dir + file_base)
     elif (file.find('.gz') != -1):
         os.system("gunzip " + file)
-        output = path + file[:-3]
     else: 
         print "Wrong archive or filename"
     
-         
+
+#
+# returns True is file is a zipped or tarred file
+# else returns false
+#        
+def is_compressed(file):
+    if zipfile.is_zipfile(file) or tarfile.is_tarfile(file) or (file.find('.gz') != -1):
+        return True
+    else: return False
+    
     
 
 
