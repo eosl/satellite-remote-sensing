@@ -128,7 +128,7 @@ def write_png(png_fname, geophys_img, product, latlon, proj_name):
         low_limit = log10(low_limit)
         upper_limit = log10(upper_limit)
         geophys_img = log10(geophys_img)
-
+    
     if product[:3] != 'sst':
         cmap = custom_cmap(resources + '/color_tables/standard/02-standard_chl.lut')
         color_bar_img_file = resources + '/color_bars/colorbar_seadas_std_chlor.png'  

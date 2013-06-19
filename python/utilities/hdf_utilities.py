@@ -25,10 +25,12 @@ class Coords:
 # 
 def read_hdf_prod(filename, prod):
     
-    dataset = gdal.Open(filename)
+    try:
+        dataset = gdal.Open(filename)
+        sub_dataset = dataset.GetSubDatasets()
+    except:
+        sub_dataset = []
     
-    #keep working on this--multiple products
-    sub_dataset = dataset.GetSubDatasets()
     if len(sub_dataset) > 0:
         try:
             sub_headings = [x[1] for x in sub_dataset]
@@ -37,12 +39,13 @@ def read_hdf_prod(filename, prod):
             return arr
         except:
             print filename + ' has no product ' + prod 
+            return []
     else:
         try: 
             return gdal_array.DatasetReadAsArray(dataset)
         except: 
             print 'ERROR: can\'t process'
-            sys.exit()
+            return []
             
             
 #

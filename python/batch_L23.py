@@ -124,68 +124,31 @@ def png_gen(smi_file, png_dir, product, meas_names):
     print '\n====> running write_png for color <=======\n'
     
     prod_img = asarray(read_hdf_prod(smi_file, 'l3m_data'))
-    bad_locations = where(asarray(prod_img) == -999)
-    if bad_locations[0] is not -1:
-        prod_img[bad_locations] = nan
     
-    proj_name = get_smi_projection(smi_file)
+    try:
+        bad_locations = where(asarray(prod_img) == -999)
+        if bad_locations[0] is not -1:
+            prod_img[bad_locations] = nan
     
-    extracted_coords = get_hdf_latlon(smi_file)
+        proj_name = get_smi_projection(smi_file)
     
-    if not os.path.exists(png_dir):
-        os.makedirs(png_dir)
-    png_ofile = png_dir + '/' + os.path.basename(smi_file)[:-8] + '.png'
+        extracted_coords = get_hdf_latlon(smi_file)
     
-    # call to hdf png generating function
-    write_png(png_ofile, prod_img, product, extracted_coords, proj_name)
+        if not os.path.exists(png_dir):
+            os.makedirs(png_dir)
+        png_ofile = png_dir + '/' + os.path.basename(smi_file)[:-8] + '.png'
     
-    if os.path.exists(png_ofile):
-        print 'wrote file ', png_ofile, '\n\n'
-    else: print 'could not generate png!!!'
+        # call to hdf png generating function
+        write_png(png_ofile, prod_img, product, extracted_coords, proj_name)
+    
+        if os.path.exists(png_ofile):
+            print 'wrote file ', png_ofile, '\n\n'
+        else: print 'could not generate png!!!'
+    except:
+        print 'Error in png_gen'
     
  
     
-
-#
-# input: list of files [file1,file2,...], list of averages ['DLY','WKY','MON'] and an integer year
-# output: [([start, end], [file1,file2,...]), ([start, end], [file1,file2,...]), ([start, end] ,[file1,file2,...]), ...]
-#
-def get_average(filelist, time_period, year):
-
-    if time_period == 'DLY':
-        start_day = arange(1,366)
-        end_day = arange(1,366)
-    elif time_period == 'WKY':
-        start_day = arange(1,366,8)
-        end_day = asarray(map(lambda i: i+7, start_day))
-    elif time_period == 'MON':
-        # check for leap years
-        if (year - 1980)%4 != 0:
-            start_day = array([1,32,60,91,121,152,182,213,244,274,305,335])
-            end_day = array([31,59,90,120,151,181,212,243,273,304,334,365])
-        else:
-            start_day = array([1,32,61,92,122,153,183,214,245,275,306,336])
-            end_day = array([31,60,91,121,152,182,213,244,274,305,335,366])
- 
-    grouping_list = [([],[]) for i in range(0,len(start_day))] #list of tuples
-    
-    for i in range(0,len(start_day)):
-        grouping_list[i][0].append('%03d' % start_day[i])
-        grouping_list[i][0].append('%03d' % end_day[i])
-        
-    # assign each file to a time group
-    for file in filelist:
-
-        for i in range(0,len(start_day)):
-
-            if get_jday(file) >= start_day[i] and get_jday(file) <= end_day[i]:
-                grouping_list[i][1].append(file)
-
-    def f(x): return len(x[1])!=0
-    grouping_list = filter(f, grouping_list) #cut empty groups
-    
-    
-    return grouping_list
     
     
 #
@@ -290,13 +253,15 @@ def process(filelist, time_period, out_dir, products, named_flags_2check, space_
 # setup environment variables
 #
 def setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_to_check):
-    filelist = asarray(glob.glob(l2dir + '/' + '*L2*'))
-    
+
     # decompress files if necessary
-    if any([is_compressed(fi) for fi in filelist]):
-        for fi in filelist:
-            decompress_file(fi)
-        filelist = asarray(glob.glob(l2dir + '/' + '*L2*'))
+    if any([is_compressed(fi) for fi in glob.glob(l2dir + '/*')]):
+        filelist = asarray(recursive_decompress(l2dir, 'L2'))
+    else: filelist = asarray(glob.glob(l2dir + '/*L2*'))
+    
+    if len(filelist) == 0:
+        print 'There are no L2 files in ' + l2dir
+        sys.exit()
 
     
     good_index = where( filelist != '' )  

@@ -5,6 +5,7 @@ sys.dont_write_bytecode = True
 
 
 import numpy as np
+import glob
 import zipfile, tarfile
 import shutil
 import hdf_utilities as hu
@@ -80,10 +81,27 @@ def decompress_file(file):
 # else returns false
 #        
 def is_compressed(file):
-    if zipfile.is_zipfile(file) or tarfile.is_tarfile(file) or (file.find('.gz') != -1):
-        return True
-    else: return False
+
+    return zipfile.is_zipfile(file) or tarfile.is_tarfile(file) or (file.find('.gz') != -1)
+
+
+
+def recursive_decompress(dir, str):
+    lst = np.asarray(glob.glob(dir + '/*'))
+    for f in lst:
+        print 'decompressing ' + f
+        decompress_file(f)
     
+    hdf_files = glob.glob(dir + '/*' + str + '*')
+    lst = np.asarray(glob.glob(dir + '/*'))    
+    dirs = np.where(os.path.isdir(lst))
+    
+    for d in lst[dirs]:
+        hdf_files = hdf_files + recursive_decompress(d, 'L2')
+    
+
+    return hdf_files
+        
     
 
 
@@ -164,6 +182,50 @@ def get_product_list(file, products):
 
     return color_prod
     
+    
+
+
+
+#
+# input: list of files [file1,file2,...], list of averages ['DLY','WKY','MON'] and an integer year
+# output: [([start, end], [file1,file2,...]), ([start, end], [file1,file2,...]), ([start, end] ,[file1,file2,...]), ...]
+#
+def get_average(filelist, time_period, year):
+
+    if time_period == 'DLY':
+        start_day = np.arange(1,366)
+        end_day = np.arange(1,366)
+    elif time_period == 'WKY':
+        start_day = np.arange(1,366,8)
+        end_day = np.asarray(map(lambda i: i+7, start_day))
+    elif time_period == 'MON':
+        # check for leap years
+        if (year - 1980)%4 != 0:
+            start_day = np.array([1,32,60,91,121,152,182,213,244,274,305,335])
+            end_day = np.array([31,59,90,120,151,181,212,243,273,304,334,365])
+        else:
+            start_day = np.array([1,32,61,92,122,153,183,214,245,275,306,336])
+            end_day = np.array([31,60,91,121,152,182,213,244,274,305,335,366])
+ 
+    grouping_list = [([],[]) for i in range(0,len(start_day))] #list of tuples
+    
+    for i in range(0,len(start_day)):
+        grouping_list[i][0].append('%03d' % start_day[i])
+        grouping_list[i][0].append('%03d' % end_day[i])
+        
+    # assign each file to a time group
+    for file in filelist:
+
+        for i in range(0,len(start_day)):
+
+            if get_jday(file) >= start_day[i] and get_jday(file) <= end_day[i]:
+                grouping_list[i][1].append(file)
+
+    def f(x): return len(x[1])!=0
+    grouping_list = filter(f, grouping_list) #cut empty groups
+    
+    
+    return grouping_list
     
     
     

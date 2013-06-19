@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import glob
+import numpy as np
 from subprocess import call
 import sys, os
 
@@ -134,13 +135,13 @@ def batch_proc_L12(l1a_dir, l2_dir='not_specified', prod_list='OC_suite', NO2_on
     l2_dir = general_utilities.path_reformat(l2_dir)
         
 
-    fname_l1a = glob.glob(l1a_dir + '/' + '*L1A*') #list of all files in level 1 directory
+    #fname_l1a = glob.glob(l1a_dir + '/' + '*L1A*') #list of all files in level 1 directory
     
     # decompress files if necessary
-    if any([is_compressed(fi) for fi in fname_l1a]):
-        for fi in fname_l1a:
-            general_utilities.decompress_file(fi)
-        fname_la1 = glob.glob(l1a_dir + '/' + '*L1A*')
+    if any([general_utilities.is_compressed(fi) for fi in glob.glob(l1a_dir + '/*')]):
+        fname_l1a = np.asarray(general_utilities.recursive_decompress(l1a_dir, 'L1'))
+    else: fname_l1a = np.asarray(glob.glob(l1a_dir + '/*L1*'))
+
 
 
     # if user doesn't specify level 2 directory, make one next to L1 data directory
