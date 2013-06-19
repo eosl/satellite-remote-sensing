@@ -121,7 +121,7 @@ def smi_gen(product, meas_names, meas_vec, bl3_fname, out_file, smi_proj, space_
 # creates png files from an smi file
 #
 def png_gen(smi_file, png_dir, product, meas_names):
-    print '\n====> running write_smi_png for color <=======\n'
+    print '\n====> running write_png for color <=======\n'
     
     prod_img = asarray(read_hdf_prod(smi_file, 'l3m_data'))
     bad_locations = where(asarray(prod_img) == -999)
@@ -137,7 +137,7 @@ def png_gen(smi_file, png_dir, product, meas_names):
     png_ofile = png_dir + '/' + os.path.basename(smi_file)[:-8] + '.png'
     
     # call to hdf png generating function
-    write_smi_png(png_ofile, prod_img, product, extracted_coords, proj_name)
+    write_png(png_ofile, prod_img, product, extracted_coords, proj_name)
     
     if os.path.exists(png_ofile):
         print 'wrote file ', png_ofile, '\n\n'
@@ -215,32 +215,7 @@ def preliminary_checks(length_filelist, length_uniq_syear, length_uniq_sat_type,
         sys.exit()
 
 
-#
-# get user products that match the products in the HDF
-# input: HDF file, list of products [prod1,prod2,...]
-# output: list of matched products [prod1,prod2,...]
-#
-def get_product_list(file, products):   
-    # Get color products from HDF and match them to input products
-    color_prod = []
-          
-    #get all products available to HDF
-    all_prod = asarray(get_l2hdf_prod(file))
 
-    if products[0] == 'all':
-        color_prod = all_prod
-    else:
-        #for each user-specified product, put in color_prod if also availible to HDF file
-        for pr in products:
-            good_prod_indx = where( all_prod == pr )
-            if len(good_prod_indx) != 0: 
-                color_prod = concatenate((color_prod, all_prod[good_prod_indx]), axis=0)
-            
-    #get rid of any empty products
-    color_prod = color_prod[where(color_prod != '')]
-
-    return color_prod
-    
 
 #
 # loop through and call each processing function (l2bin ==> make ascii ==> l3bin ==> smigen ==> png)
@@ -384,16 +359,8 @@ def batch_proc_L23(l2dir, output_dir='not_specified', products=['all'], space_re
     hires = False
     
     # make sure directories are right (/ and ~)
-    l2dir = l2dir.strip()
-    output_dir = output_dir.strip()
-    if l2dir[-1] == '/':
-        l2dir = l2dir[:-1]
-    if output_dir[-1] == '/':
-        output_dir = output_dir[:-1]
-    if l2dir[0] == '~':
-        l2dir = os.path.expanduser(l2dir)
-    if output_dir[0] == '~':
-        output_dir = os.path.expanduser(output_dir)
+    l2dir = path_reformat(l2dir)
+    output_dir = path_reformat(output_dir)
         
     
     #setup variables
@@ -401,13 +368,12 @@ def batch_proc_L23(l2dir, output_dir='not_specified', products=['all'], space_re
         = setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_to_check)
         
 
-
     # put output data next to input data if not specified by user
     if output_dir == 'not_specified':
         output_dir = os.path.dirname(l2dir) + '/' + 'L3_binmap'
 
     
-    # get rid of bad average value
+    # get rid of bad average values, i.e. only keep 'DLY', 'WKY', 'MON'
     def f(x): return (x == 'DLY' or x == 'WKY' or x == 'MON')
     time_period = filter(f, time_period) #cut empty groups
     

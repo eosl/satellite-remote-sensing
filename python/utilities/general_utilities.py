@@ -7,6 +7,7 @@ sys.dont_write_bytecode = True
 import numpy as np
 import zipfile, tarfile
 import shutil
+import hdf_utilities as hu
 
 
 
@@ -118,7 +119,50 @@ def map_resize(data, latitudes, longitudes, xdim, ydim):
     return mapped
 
     
+
+#
+# get rid of ~ at beginning and / at end of file name
+#
+def path_reformat(path):
+    path = path.strip()
+
+    # get rid of troublesome '/' at end
+    if path[-1] == '/':
+        path = path[:-1]
+
+    # get complete path
+    if path[0] == '~':
+        path = os.path.expanduser(path)
+        
+    return path
+  
+  
     
+#
+# get user products that match the products in the HDF
+# input: HDF file, list of products [prod1,prod2,...]
+# output: list of matched products [prod1,prod2,...]
+#
+def get_product_list(file, products):   
+    # Get color products from HDF and match them to input products
+    color_prod = []
+          
+    #get all products available to HDF
+    all_prod = np.asarray(hu.get_l2hdf_prod(file))
+
+    if products[0] == 'all':
+        color_prod = all_prod
+    else:
+        #for each user-specified product, put in color_prod if also availible to HDF file
+        for pr in products:
+            good_prod_indx = np.where( all_prod == pr )
+            if len(good_prod_indx) != 0: 
+                color_prod = np.concatenate((color_prod, all_prod[good_prod_indx]), axis=0)
+            
+    #get rid of any empty products
+    color_prod = color_prod[np.where(color_prod != '')]
+
+    return color_prod
     
     
     

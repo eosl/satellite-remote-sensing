@@ -18,30 +18,30 @@ import shutil
 # ouput: python color map
 #
 def custom_cmap(ct):
-	f = open(ct)
-	color_array = array([])
-	for line in f.readlines():
-		color_array = append(color_array, line)
-	f.close()
-	
-	color_array = map( lambda i: map( lambda j: round(float(j)/255.0, 2), i.split() ), color_array[1:] )
-	color_int_array = arange(0.0,1.0,round(1.0/(len(color_array)-1), 3))
-	color_int_array[-2] = 1.0
+    f = open(ct)
+    color_array = array([])
+    for line in f.readlines():
+    	color_array = append(color_array, line)
+    f.close()
 
-	red_array = map( lambda i: i[0], color_array)
-	green_array = map( lambda i: i[1], color_array)
-	blue_array = map( lambda i: i[2], color_array)
-	
-	
-	red_tup = [[color_int_array[i], red_array[i+1], red_array[i]] for i in range(0,len(color_int_array)-1)]
-	green_tup = [[color_int_array[i], green_array[i+1], green_array[i]] for i in range(0,len(color_int_array)-1)]
-	blue_tup = [[color_int_array[i], blue_array[i+1], blue_array[i]] for i in range(0,len(color_int_array)-1)]
-	
-	cdict = {'red': red_tup,		
-			 'green': green_tup,	
-			 'blue': blue_tup}
-	
-	return matplotlib.colors.LinearSegmentedColormap('colormap',cdict,256)
+    color_array = map( lambda i: map( lambda j: round(float(j)/255.0, 2), i.split() ), color_array[1:] )
+    color_int_array = arange(0.0,1.0,round(1.0/(len(color_array)-1), 3))
+    color_int_array[-2] = 1.0
+
+    red_array = map( lambda i: i[0], color_array)
+    green_array = map( lambda i: i[1], color_array)
+    blue_array = map( lambda i: i[2], color_array)
+
+
+    red_tup = [[color_int_array[i], red_array[i+1], red_array[i]] for i in range(0,len(color_int_array)-1)]
+    green_tup = [[color_int_array[i], green_array[i+1], green_array[i]] for i in range(0,len(color_int_array)-1)]
+    blue_tup = [[color_int_array[i], blue_array[i+1], blue_array[i]] for i in range(0,len(color_int_array)-1)]
+
+    cdict = {'red': red_tup,		
+    		 'green': green_tup,	
+    		 'blue': blue_tup}
+
+    return matplotlib.colors.LinearSegmentedColormap('colormap',cdict,256)
 
 
 #
@@ -55,7 +55,7 @@ def get_prod_min_max(fname, prod):
     print '\ngetting product min/max for color scaling png output using:'
     print 'min/max table: ', fname
     print 'searching for product: ', prod
-    
+
     f = open(fname)
     l = f.readlines()
     m = l[0].split('\r')
@@ -96,7 +96,7 @@ def get_prod_min_max(fname, prod):
 #   latlon ==> object of type Coords()
 #   proj_name ==> projection type (such as 'RECT' or 'CYL')
 #
-def write_smi_png(png_fname, geophys_img, product, latlon, proj_name):
+def write_png(png_fname, geophys_img, product, latlon, proj_name):
     
     rootname = os.path.basename(png_fname)    
     #center_lat, center_lon = get_cntr_latlon(latlon)#not used
@@ -109,7 +109,9 @@ def write_smi_png(png_fname, geophys_img, product, latlon, proj_name):
     if proj_name is 'Equidistant Cylindrical': proj_name = 'Cylindrical'
     
     #-------------------------------------------------------------------#
-    prod_min_max_table = os.path.expanduser('dly_wkl_mon_qcmasked/png_min_max_settings/prod_min_max_tab_delimted_txt')
+    resources = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'dly_wkl_mon_qcmasked'))
+    
+    prod_min_max_table = resources + '/png_min_max_settings/prod_min_max_tab_delimted_txt'
     prod_min_max_info = get_prod_min_max(prod_min_max_table, product)
     
     low_limit = prod_min_max_info[1]
@@ -128,11 +130,11 @@ def write_smi_png(png_fname, geophys_img, product, latlon, proj_name):
         geophys_img = log10(geophys_img)
 
     if product[:3] != 'sst':
-        cmap = custom_cmap(os.path.expanduser('dly_wkl_mon_qcmasked/color_tables/standard/02-standard_chl.lut'))
-        color_bar_img_file= os.path.expanduser('dly_wkl_mon_qcmasked/color_bars/colorbar_seadas_std_chlor.png')   
+        cmap = custom_cmap(resources + '/color_tables/standard/02-standard_chl.lut')
+        color_bar_img_file = resources + '/color_bars/colorbar_seadas_std_chlor.png'  
     if product[:3] == 'sst':
-        cmap = custom_cmap(os.path.expanduser('dly_wkl_mon_qcmasked/color_tables/standard/03-standard_sst.lut'))
-        color_bar_img_file= os.path.expanduser('dly_wkl_mon_qcmasked/color_bars/colorbar_seadas_std_sst.png')
+        cmap = custom_cmap(resources + '/color_tables/standard/03-standard_sst.lut')
+        color_bar_img_file = resources + '/color_bars/colorbar_seadas_std_sst.png'
 
     
     #specify color map with NaN's as black

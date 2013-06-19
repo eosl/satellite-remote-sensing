@@ -30,10 +30,13 @@ def read_hdf_prod(filename, prod):
     #keep working on this--multiple products
     sub_dataset = dataset.GetSubDatasets()
     if len(sub_dataset) > 0:
-        sub_headings = [x[1] for x in sub_dataset]
-        chlor_index = next(idx for idx,string in enumerate(sub_headings) if prod in string)
-        arr = gdal_array.LoadFile(sub_dataset[chlor_index][0])
-        return arr
+        try:
+            sub_headings = [x[1] for x in sub_dataset]
+            chlor_index = next(idx for idx,string in enumerate(sub_headings) if prod in string)
+            arr = gdal_array.LoadFile(sub_dataset[chlor_index][0])
+            return arr
+        except:
+            print filename + ' has no product ' + prod 
     else:
         try: 
             return gdal_array.DatasetReadAsArray(dataset)
@@ -104,18 +107,20 @@ def get_l2hdf_prod(file):
                         
     hdf_prod_list = []
     
-    sub_dataset = gdal.Open(file).GetSubDatasets()
+    try:
+        sub_dataset = gdal.Open(file).GetSubDatasets()
     
-    # make a list of hdf dataset names available
-    dataset_names = [x[1] for x in sub_dataset]
-    first_idx = [i.index(']')+1 for i in dataset_names]
-    last_idx = [i.index('(') for i in dataset_names]
-    dataset_names = map(lambda i,j,k: i[j:k], dataset_names, first_idx, last_idx)
-    dataset_names = map(lambda i: i.strip(), dataset_names)
+        # make a list of hdf dataset names available
+        dataset_names = [x[1] for x in sub_dataset]
+        first_idx = [i.index(']')+1 for i in dataset_names]
+        last_idx = [i.index('(') for i in dataset_names]
+        dataset_names = map(lambda i,j,k: i[j:k], dataset_names, first_idx, last_idx)
+        dataset_names = map(lambda i: i.strip(), dataset_names)
     
-    for each in dataset_names:
-        if any([each in s for s in master_prod_list]):
-            hdf_prod_list.append(each)
+        for each in dataset_names:
+            if any([each in s for s in master_prod_list]):
+                hdf_prod_list.append(each)
+    except: print file  + ' is not a proper HDF file'
     
     return hdf_prod_list
     
