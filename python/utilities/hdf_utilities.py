@@ -103,7 +103,7 @@ def get_l2hdf_prod(file):
                         'adg_gsm','adg_qaa','aph_giop','aph_gsm','aph_qaa','arp','a_giop','a_gsm','a_qaa','bbp_giop','bbp_gsm','bbp_qaa',
                         'bb_giop','bb_gsm','bb_qaa','BT','calcite_2b','calcite_3b','cfe','chlor_oc2','chlor_oc3','chlor_oc4','chl_clark',
                         'chl_gsm','chl_octsc','evi','flh','ipar','Kd_lee','Kd_morel','Kd_mueller','Kd_obpg','KPAR_lee','KPAR_morel','ndvi',
-                        'poc_clark','poc_stramski_490','tsm_clark','Zeu_morel','Zhl_morel','Zphotic_lee','Zsd_morel', 'chl_oc2']
+                        'poc_clark','poc_stramski_490','tsm_clark','Zeu_morel','Zhl_morel','Zphotic_lee','Zsd_morel', 'chl_oc2', 'sst']
                         
     hdf_prod_list = []
     
