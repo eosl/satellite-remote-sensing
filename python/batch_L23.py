@@ -268,7 +268,7 @@ def setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_
        
     input_coords = Coords()
     if latlon[0] == 'whole':
-        input_coords = get_hdf_latlon(glob.glob(l2dir + '/*')[0] )
+        input_coords = get_hdf_latlon(filelist[0])
     else:
         input_coords.north = latlon[2]
         input_coords.south = latlon[0]

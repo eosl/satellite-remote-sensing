@@ -167,4 +167,8 @@ def get_sds7_default_l2flags(sensor_id, prod_type):
     
     return flags[1]
     
+    
+
+    
+    
 

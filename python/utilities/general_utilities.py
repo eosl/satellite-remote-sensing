@@ -9,6 +9,7 @@ import glob
 import zipfile, tarfile
 import shutil
 import hdf_utilities as hu
+import Coords
 
 
 
@@ -93,10 +94,10 @@ def recursive_decompress(dir, str):
         decompress_file(f)
     
     hdf_files = glob.glob(dir + '/*' + str + '*')
-    lst = np.asarray(glob.glob(dir + '/*'))    
-    dirs = np.where(os.path.isdir(lst))
+    lst = np.asarray(glob.glob(dir + '/*'))   
+    dir_idx = np.array([ os.path.isdir(f) for f in lst ]) 
     
-    for d in lst[dirs]:
+    for d in lst[dir_idx]:
         hdf_files = hdf_files + recursive_decompress(d, 'L2')
     
 
@@ -226,6 +227,12 @@ def get_average(filelist, time_period, year):
     
     
     return grouping_list
+    
+    
+
+
+    
+    
     
     
     

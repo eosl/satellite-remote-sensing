@@ -133,9 +133,6 @@ def batch_proc_L12(l1a_dir, l2_dir='not_specified', prod_list='OC_suite', NO2_on
     # make sure directories are right (/ and ~)
     l1a_dir = general_utilities.path_reformat(l1a_dir)
     l2_dir = general_utilities.path_reformat(l2_dir)
-        
-
-    #fname_l1a = glob.glob(l1a_dir + '/' + '*L1A*') #list of all files in level 1 directory
     
     # decompress files if necessary
     if any([general_utilities.is_compressed(fi) for fi in glob.glob(l1a_dir + '/*')]):
