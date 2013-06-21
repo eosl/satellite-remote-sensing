@@ -18,12 +18,12 @@ from subprograms import *
 
 
 
-# Coordinates (north, south, east, west)
-class Coords:
-    north = 0
-    south = 0
-    east = 0
-    west = 0
+# # Coordinates (north, south, east, west)
+# class Coords:
+#     north = 0
+#     south = 0
+#     east = 0
+#     west = 0
     
 
     
@@ -266,7 +266,7 @@ def setup(l2dir, smi_proj, latlon, stats_yesno, color_flags_to_check, sst_flags_
     
     good_index = where( filelist != '' )  
        
-    input_coords = Coords()
+    input_coords = Coords.Coords()
     if latlon[0] == 'whole':
         input_coords = get_hdf_latlon(filelist[0])
     else:

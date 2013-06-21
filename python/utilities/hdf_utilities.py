@@ -4,17 +4,18 @@ import sys, os
 sys.dont_write_bytecode = True
 
 from osgeo import gdal, gdal_array
+import Coords
 
 
 
-#
-# Coordinates (north, south, east, west)
-# 
-class Coords:
-    north = 0
-    south = 0
-    east = 0
-    west = 0
+# #
+# # Coordinates (north, south, east, west)
+# # 
+# class Coords:
+#     north = 0
+#     south = 0
+#     east = 0
+#     west = 0
 
 
 #
@@ -77,7 +78,7 @@ def get_hdf_latlon(file):
         dump = os.popen('gdalinfo ' + file).read().split('\n')
         latlon_keys = ['Southernmost Latitude', 'Westernmost Longitude', 'Northernmost Latitude', 'Easternmost Longitude']   
         latlon = []
-        extracted_coords = Coords()
+        extracted_coords = Coords.Coords()
     
         for key in latlon_keys:
             list_idx = next(idx for idx, string in enumerate(dump) if key in string)
