@@ -8,16 +8,6 @@ import Coords
 
 
 
-# #
-# # Coordinates (north, south, east, west)
-# # 
-# class Coords:
-#     north = 0
-#     south = 0
-#     east = 0
-#     west = 0
-
-
 #
 # input:
 #   filename ==> HDF file
@@ -74,11 +64,12 @@ def get_smi_projection(file):
 #
 def get_hdf_latlon(file):
     
+    extracted_coords = Coords.Coords()
+    
     try:
         dump = os.popen('gdalinfo ' + file).read().split('\n')
         latlon_keys = ['Southernmost Latitude', 'Westernmost Longitude', 'Northernmost Latitude', 'Easternmost Longitude']   
         latlon = []
-        extracted_coords = Coords.Coords()
     
         for key in latlon_keys:
             list_idx = next(idx for idx, string in enumerate(dump) if key in string)

@@ -5,8 +5,7 @@ from pylab import *
 import sys, os
 from subprocess import call
 import glob
-from osgeo import gdal
-from osgeo import gdal_array
+from osgeo import gdal, gdal_array
 import shutil
 
 sys.path.insert(0, 'utilities')
@@ -16,14 +15,6 @@ from hdf_utilities import *
 from general_utilities import *
 from subprograms import *
 
-
-
-# # Coordinates (north, south, east, west)
-# class Coords:
-#     north = 0
-#     south = 0
-#     east = 0
-#     west = 0
     
 
     
