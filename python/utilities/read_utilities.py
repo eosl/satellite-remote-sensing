@@ -39,6 +39,7 @@ def read_aviso_madt_nc(file):
     
     mapped = map_resize(sla, lat_values, lon_values, 1080, 540)
     
+    
     return mapped
     
     
