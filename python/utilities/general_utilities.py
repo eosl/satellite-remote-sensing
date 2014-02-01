@@ -115,27 +115,27 @@ def recursive_decompress(dir, str):
 # output: 2D array of size (xdim, ydim)
 #
 def map_resize(data, latitudes, longitudes, xdim, ydim):
-    lon1 = -180.0
-    lon2 = 180.0
-    lat1 = -90.0
-    lat2 = 90.0
+    # lon1 = -180.0
+    # lon2 = 180.0
+    # lat1 = -90.0
+    # lat2 = 90.0
     
     mapped = np.empty((ydim,xdim))
     mapped[:,:] = np.nan
 
-    pixels_per_lat = ydim/(lat2 - lat1)
-    pixels_per_lon = xdim/(lon2 - lon1)
+    pixels_per_lat = ydim/(90.0 - (-90.0))
+    pixels_per_lon = xdim/(180.0 - (-180.0))
     
     # map longitudes and latitudes to pixel number
-    lon_pix = np.where(longitudes <= 180, (longitudes+179)*pixels_per_lon, (longitudes-179)*pixels_per_lon)
+    lon_pix = map( lambda lon: (lon + 179)*pixels_per_lon, longitudes )
     lat_pix = map( lambda lat: (lat + 89)*pixels_per_lat, latitudes )
+
 
     # put each lat/lon in its spot on rectangular grid
     def func(lat,lon,value): mapped[lat,lon] = value    
-    map( lambda i: map(lambda j: func(lat_pix[i], lon_pix[j], data[i,j]) ,range(0,len(lon_pix))) ,range(0,len(lat_pix)) )
+    map( lambda i: map(lambda j: func(lat_pix[i], lon_pix[j], data[i,j]), range(0,len(lon_pix))), range(0,len(lat_pix)) )
     
-    
-    return mapped
+    return [mapped, pixels_per_lat, pixels_per_lon]
 
     
 
